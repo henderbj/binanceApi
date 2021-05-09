@@ -1,0 +1,24 @@
+{
+  "name": "binanceapi",
+  "version": "0.0.1",
+  "description": "Abstraction for use of binance.com api.",
+  "main": "binanceApi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/. test/. --config .eslintrc.json",
+    "lintfix": "eslint src/. test/. --config .eslintrc.json --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henderbj/binanceApi.git"
+  },
+  "author": "henderbj",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/henderbj/binanceApi/issues"
+  },
+  "homepage": "https://github.com/henderbj/binanceApi#readme",
+  "devDependencies": {
+    "eslint": "^7.26.0"
+  }
+}
