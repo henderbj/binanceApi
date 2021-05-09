@@ -2,7 +2,7 @@
 
 // https://github.com/henderbj/webClient
 // webClient dir must be at same level as binanceApi dir for this require to work
-const webClient = require('../../webClient/webClient');
+const webClient = require('../../webClient/src/webClient');
 
 const apiUnblocked = null; //value of blockedTil when is unblocked
 
