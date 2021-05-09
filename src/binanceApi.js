@@ -192,15 +192,6 @@ exports.options = function (type, host = '', params = {}, binance = {}) {
 };
 
 exports.Bot = class {
-  //id;
-  //baseCoin;
-  //cummulativeQuoteQty;
-  //quoteCoin;
-  //symbol;
-  //interval;
-  //quoteMax; //quote value to invest when buying
-  //status;
-
   constructor(
     baseCoin = 'BTC',
     quoteCoin = 'USDT',
