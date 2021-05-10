@@ -52,6 +52,13 @@ exports.request = function (options = {}, callback) {
   return request;
 };
 
+exports.manageNetError = function(error){
+  console.error('Caught Error: error=', error);
+  if(error.code === 'ENOTFOUND'){
+    process.exit(error.errno);
+  }
+}
+
 exports.checkLimits = function (message) {
   const headers = message.headers;
   console.log(
@@ -245,7 +252,6 @@ exports.Bot = class {
     this.status = status;
   }
   processMyTrades(input) {
-    //console.log('processMyTrades: this=', this);
     let data = JSON.parse(input.body);
     const freeBaseCoin = exports.Bot.freeCoin(this.baseCoin);
     let baseQtyAccumulator = 0;
@@ -283,7 +289,7 @@ exports.Bot = class {
       {},
       { keys: exports.keys }
     );
-    exports.request(options, exports.Bot.processAccount);
+    return exports.request(options, exports.Bot.processAccount);
   }
   static getAccount() {
     return exports.Bot.account;
