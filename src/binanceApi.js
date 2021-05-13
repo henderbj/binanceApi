@@ -86,6 +86,7 @@ exports.callTypes = Object.freeze({
   allCoins: 5,
   account: 6,
   myTrades: 7,
+  exchangeInfo: 8
 });
 exports.sides = Object.freeze({ buy: 'BUY', sell: 'SELL' });
 
@@ -185,6 +186,10 @@ exports.options = function (type, host = '', params = {}, binance = {}) {
     result.network.path = '/api/v3/myTrades';
     result.network.method = 'GET';
     break;
+  case exports.callTypes.exchangeInfo:
+    result.network.path = '/api/v3/exchangeInfo';
+    result.network.method = 'GET';
+  break
   default:
     throw new Error(
       'Invalid api call type. Valid values are in exports.types object of binanceApi'
@@ -202,7 +207,6 @@ exports.Bot = class {
   constructor(
     baseCoin = 'BTC',
     quoteCoin = 'USDT',
-    interval = '1d',
     quoteMax = '15',
     cummulativeQuoteQty = null
   ) {
@@ -213,7 +217,6 @@ exports.Bot = class {
     this.baseCoin = baseCoin;
     this.quoteCoin = quoteCoin;
     this.symbol = baseCoin + quoteCoin;
-    this.interval = interval;
     this.quoteMax = quoteMax;
     this.cummulativeQuoteQty = cummulativeQuoteQty;
     exports.Bot.instances.push(this.id);
@@ -236,9 +239,6 @@ exports.Bot = class {
   getSymbol() {
     return this.symbol;
   }
-  getInterval() {
-    return this.interval;
-  }
   getQuoteMax() {
     return this.quoteMax;
   }
@@ -250,6 +250,12 @@ exports.Bot = class {
   }
   setStatus(status) {
     this.status = status;
+  }
+  getExchangeInfo() {
+    return this.exchangeInfo;
+  }
+  setExchangeInfo(info){
+    this.exchangeInfo = info;
   }
   processMyTrades(input) {
     let data = JSON.parse(input.body);
