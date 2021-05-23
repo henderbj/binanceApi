@@ -3,12 +3,54 @@
 // https://github.com/henderbj/webClient
 // webClient dir must be at same level as binanceApi dir for this require to work
 const webClient = require('../../webClient/src/webClient');
+const stats = require('../../jsStatistics/src/jsStatistics');
 
 const apiUnblocked = null; //value of blockedTil when is unblocked
 
 exports.blockedTil = apiUnblocked;
 exports.keys = {};
 exports.host = '';
+
+exports.tradeStatuses = Object.freeze({
+  'nothing': 1,
+  'sell': 2,
+  'sellLowPrice': 3,
+  'buy': 4
+});
+
+exports.tradeStrategy = function(userOptions, bot, klines, interval) {
+  const closePrices = klines.map(x => x[4]);
+  const rsi = stats.rsi(closePrices, exports.Bot.period);
+  const rsiLast = rsi[rsi.length - 1];
+  const rsiLast1 = rsi[rsi.length - 2];
+  const latestPrice = parseFloat(klines[klines.length - 1][4]);
+  const valueNow = exports.Bot.getValueInQuote(bot.getBaseCoin(), latestPrice);
+  const valueBuy = parseFloat(bot.getCummulativeQuoteQty());
+  const status = valueNow > 10 ? exports.sides.sell : exports.sides.buy;
+  bot.setStatus(status);
+  console.log('tradeStrategy: bot=', bot.id, 'symbol=', bot.getSymbol(),
+    'interval=', interval,
+    'rsiLast1=', rsiLast1.toFixed(2), 'rsiLast=', rsiLast.toFixed(2),
+    'valueBuy=', valueBuy.toFixed(2),
+    'valueNow=', valueNow.toFixed(2), 'status=', status);
+  if(status === exports.sides.buy
+    && rsiLast < userOptions.buy.rsi
+    && rsiLast > rsiLast1 + userOptions.buy.gap) {
+    return exports.tradeStatuses.buy;
+  }
+  if(status === exports.sides.sell
+    && rsiLast > userOptions.sell.rsi
+    && rsiLast < rsiLast1 - userOptions.sell.gap
+    || valueNow > valueBuy * parseFloat(userOptions.gain.max)) {
+    if(valueNow > valueBuy * parseFloat(userOptions.gain.min)) {
+      return exports.tradeStatuses.sell;
+    }
+    else{
+      return exports.tradeStatuses.sellLowPrice;
+    }
+  }
+  return exports.tradeStatuses.nothing;
+};
 
 exports.request = function (options = {}, callback) {
   if (!options) {
@@ -57,7 +99,7 @@ exports.manageNetError = function(error){
   if(error.code === 'ENOTFOUND'){
     process.exit(error.errno);
   }
-}
+};
 
 exports.checkLimits = function (message) {
   const headers = message.headers;
@@ -189,7 +231,7 @@ exports.options = function (type, host = '', params = {}, binance = {}) {
   case exports.callTypes.exchangeInfo:
     result.network.path = '/api/v3/exchangeInfo';
     result.network.method = 'GET';
-  break
+    break;
   default:
     throw new Error(
       'Invalid api call type. Valid values are in exports.types object of binanceApi'
@@ -339,5 +381,8 @@ exports.Bot = class {
     }
     //set binance account information and latest balance
     exports.Bot.setAccount(account);
+    console.log('processAccount: account=', account);
   }
 };
+
+exports.Bot.period = 6;
