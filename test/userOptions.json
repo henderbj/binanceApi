@@ -1,0 +1,24 @@
+{
+  "host": "testnet.binance.vision",
+  "period": 6,
+  "keysFile": "../.keys.test.json",
+  "botsOptions": [
+    {"baseCoin": "BTC", "quoteCoin": "USDT"}
+  ],
+  "gain": {
+    "min": 1.03,
+    "max": 1.50
+  },
+  "maxLossPercent": 0.2,
+  "buy": {
+    "interval": "1d",
+  	"rsi": 30,
+    "gap": 10
+  },
+  "sell":{
+    "interval": "6h",
+  	"rsi": 36,
+    "gap": 2.0
+  },
+  "mainDelay": 3000
+}

@@ -4,9 +4,10 @@
   "description": "Abstraction for use of binance.com api.",
   "main": "binanceApi.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json",
-    "lintfix": "eslint src/. test/. --config .eslintrc.json --fix"
+    "lintfix": "eslint src/. test/. --config .eslintrc.json --fix",
+    "mocha": "mocha test/ --recursive --exit"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/henderbj/binanceApi#readme",
   "devDependencies": {
-    "eslint": "^7.26.0"
+    "eslint": "^7.26.0",
+    "mocha": "^8.4.0"
   }
 }
