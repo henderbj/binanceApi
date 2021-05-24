@@ -18,17 +18,27 @@ exports.tradeStatuses = Object.freeze({
   'buy': 4
 });
 
-exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.now()) {
+//exports.klineFilter: it filters the klines array by removing last kline if less than fraction timePeriod
+//has passed. It returns null if timePeriod is invalid or if klines are too old.
+exports.klinesFilter = function(klines, time=Date.now(), fraction=0.5) {
   const timePeriod = klines[1][0] - klines[0][0];
   const lastKline = klines.pop();
   const lastOpenTime = lastKline[0];
   if(!timePeriod || time - lastOpenTime > timePeriod * 1.1) {
-    return exports.tradeStatuses.nothing;
+    return null;
   }
   const timeDelay = time - lastOpenTime;
   const lastTimeRate = timeDelay / timePeriod;
-  if(lastTimeRate >= 0.5) {
+  if(lastTimeRate >= fraction) {
     klines.push(lastKline);
+  }
+  return klines;
+};
+
+exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.now()) {
+  klines = exports.klinesFilter(klines, time);
+  if(!klines) {
+    return exports.tradeStatuses.nothing;
   }
   const closePrices = klines.map(x => x[4]);
   const rsi = stats.rsi(closePrices, exports.Bot.period);
