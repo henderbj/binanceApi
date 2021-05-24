@@ -18,7 +18,18 @@ exports.tradeStatuses = Object.freeze({
   'buy': 4
 });
 
-exports.tradeStrategy = function(userOptions, bot, klines, interval) {
+exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.now()) {
+  const timePeriod = klines[1][0] - klines[0][0];
+  const lastKline = klines.pop();
+  const lastOpenTime = lastKline[0];
+  if(!timePeriod || time - lastOpenTime > timePeriod * 1.1) {
+    return exports.tradeStatuses.nothing;
+  }
+  const timeDelay = time - lastOpenTime;
+  const lastTimeRate = timeDelay / timePeriod;
+  if(lastTimeRate >= 0.5) {
+    klines.push(lastKline);
+  }
   const closePrices = klines.map(x => x[4]);
   const rsi = stats.rsi(closePrices, exports.Bot.period);
   const rsiLast = rsi[rsi.length - 1];

@@ -19,7 +19,7 @@ describe('tradeStrategy function tests', function() {
       api.Bot.setAccount(account);
       const klines = require('./klines-nothing.json');
       const interval = '1d';
-      const strategy = api.tradeStrategy(userOptions, bot, klines, interval);
+      const strategy = api.tradeStrategy(userOptions, bot, klines, interval, 1621814399999);
       assert.equal(strategy, api.tradeStatuses.nothing);
     });
     it('should return --buy-- if klines are down and growing', function() {
@@ -27,7 +27,7 @@ describe('tradeStrategy function tests', function() {
       bot.setCummulativeQuoteQty(0.00);
       const klines = require('./klines-buy.json');
       const interval = '1d';
-      const strategy = api.tradeStrategy(userOptions, bot, klines, interval);
+      const strategy = api.tradeStrategy(userOptions, bot, klines, interval, 1621814399999);
       assert.equal(strategy, api.tradeStatuses.buy);
     });
     it('should return --sell-- if klines are up and reducing', function() {
@@ -37,7 +37,7 @@ describe('tradeStrategy function tests', function() {
       setFree(account, bot.getBaseCoin(), 0.01);
       const klines = require('./klines-sell.json');
       const interval = '1d';
-      const strategy = api.tradeStrategy(userOptions, bot, klines, interval);
+      const strategy = api.tradeStrategy(userOptions, bot, klines, interval, 1621814399999);
       assert.equal(strategy, api.tradeStatuses.sell);
     });
     it('should return --sellLowPrice-- if klines are up and reducing but valueNow < valueBuy', function() {
@@ -47,7 +47,7 @@ describe('tradeStrategy function tests', function() {
       setFree(account, bot.getBaseCoin(), 0.01);
       const klines = require('./klines-sellLowPrice.json');
       const interval = '1d';
-      const strategy = api.tradeStrategy(userOptions, bot, klines, interval);
+      const strategy = api.tradeStrategy(userOptions, bot, klines, interval, 1621814399999);
       assert.equal(strategy, api.tradeStatuses.sellLowPrice);
     });
     it('should return --sell-- if klines are over max gain', function() {
@@ -57,7 +57,7 @@ describe('tradeStrategy function tests', function() {
       setFree(account, bot.getBaseCoin(), 0.01);
       const klines = require('./klines-nothing.json');
       const interval = '1d';
-      const strategy = api.tradeStrategy(userOptions, bot, klines, interval);
+      const strategy = api.tradeStrategy(userOptions, bot, klines, interval, 1621814399999);
       assert.equal(strategy, api.tradeStatuses.sell);
     });
   });
