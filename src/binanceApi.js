@@ -54,15 +54,15 @@ exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.n
     'rsiLast1=', rsiLast1.toFixed(2), 'rsiLast=', rsiLast.toFixed(2),
     'valueBuy=', valueBuy.toFixed(2),
     'valueNow=', valueNow.toFixed(2), 'status=', status);
-  if(status === exports.sides.buy
-    && rsiLast < userOptions.buy.rsi
-    && rsiLast > rsiLast1 + userOptions.buy.gap) {
-    return exports.tradeStatuses.buy;
+  if(status === exports.sides.buy) {
+    if(rsiLast < userOptions.buy.rsi
+      && rsiLast > rsiLast1 + userOptions.buy.gap) {
+      return exports.tradeStatuses.buy;
+    }
   }
-  if(status === exports.sides.sell
-    && rsiLast > userOptions.sell.rsi
-    && rsiLast < rsiLast1 - userOptions.sell.gap
-    || valueNow > valueBuy * parseFloat(userOptions.gain.max)) {
+  else if(rsiLast > userOptions.sell.rsi
+  && rsiLast < rsiLast1 - userOptions.sell.gap
+  || valueNow > valueBuy * parseFloat(userOptions.gain.max)) {
     if(valueNow > valueBuy * parseFloat(userOptions.gain.min)) {
       return exports.tradeStatuses.sell;
     }
