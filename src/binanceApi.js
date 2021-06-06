@@ -38,6 +38,7 @@ exports.klinesFilter = function(klines, time=Date.now(), fraction=0.5) {
 exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.now()) {
   klines = exports.klinesFilter(klines, time);
   if(!klines) {
+    console.error('klines is false. klines=', klines);
     return exports.tradeStatuses.nothing;
   }
   const closePrices = klines.map(x => x[4]);
