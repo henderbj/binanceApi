@@ -49,7 +49,7 @@ exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.n
   const latestPrice = parseFloat(klines[klines.length - 1][4]);
   const valueNow = exports.Bot.getValueInQuote(bot.getBaseCoin(), latestPrice);
   const valueBuy = parseFloat(bot.getCummulativeQuoteQty());
-  const status = valueNow > 10 ? exports.sides.sell : exports.sides.buy;
+  const status = valueBuy > 10 || valueNow > 10 ? exports.sides.sell : exports.sides.buy;
   bot.setStatus(status);
   console.log('tradeStrategy: bot=', bot.id, 'symbol=', bot.getSymbol(),
     'interval=', interval,
