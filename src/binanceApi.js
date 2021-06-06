@@ -351,7 +351,7 @@ exports.Bot = class {
     if (baseQtyMax > 0) {
       approxQuoteQty = (quoteQtyMax / baseQtyMax) * freeBaseCoin;
     }
-    if(approxQuoteQty) {
+    if(approxQuoteQty || !baseQtyMax) {
       this.setCummulativeQuoteQty(approxQuoteQty);
     }
   }
