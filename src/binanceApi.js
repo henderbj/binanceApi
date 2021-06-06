@@ -24,7 +24,8 @@ exports.klinesFilter = function(klines, time=Date.now(), fraction=0.5) {
   const timePeriod = klines[1][0] - klines[0][0];
   const lastKline = klines.pop();
   const lastOpenTime = lastKline[0];
-  if(!timePeriod || time - lastOpenTime > timePeriod * 1.1) {
+  if(!timePeriod || time - lastOpenTime >= timePeriod * 2) {
+    console.error('klinesFilter: timePeriod=', timePeriod, 'time=', time, 'lastOpenTime=', lastOpenTime);
     return null;
   }
   const timeDelay = time - lastOpenTime;
@@ -38,7 +39,7 @@ exports.klinesFilter = function(klines, time=Date.now(), fraction=0.5) {
 exports.tradeStrategy = function(userOptions, bot, klines, interval, time=Date.now()) {
   klines = exports.klinesFilter(klines, time);
   if(!klines) {
-    console.error('klines is false. klines=', klines);
+    console.error('tradeStrategy: klines is false. klines=', klines);
     return exports.tradeStatuses.nothing;
   }
   const closePrices = klines.map(x => x[4]);
