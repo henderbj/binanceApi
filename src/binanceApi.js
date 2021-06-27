@@ -20,7 +20,8 @@ exports.tradeStatuses = Object.freeze({
 
 //exports.klineFilter: it filters the klines array by removing last kline if less than fraction timePeriod
 //has passed. It returns null if timePeriod is invalid or if klines are too old.
-exports.klinesFilter = function(klines, time=Date.now(), fraction=0.5) {
+exports.klinesFilter = function(klinesIn, time=Date.now(), fraction=0.5) {
+  const klines = klinesIn.slice(); //clone klinesIn as klines
   const timePeriod = klines[1][0] - klines[0][0];
   const lastKline = klines.pop();
   const lastOpenTime = lastKline[0];
