@@ -273,7 +273,7 @@ exports.Bot = class {
   constructor(
     baseCoin = 'BTC',
     quoteCoin = 'USDT',
-    quoteMax = '15',
+    quoteMax = 15,
     cummulativeQuoteQty = null
   ) {
     if (typeof exports.Bot.instances === 'undefined') {
